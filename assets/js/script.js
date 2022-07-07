@@ -1,5 +1,6 @@
 // display current day at the top of the page
-const currentDay = moment().format('dddd, MMMM Do, YYYY, HH:mm');
+const currentDay = moment().format('dddd, MMMM Do, YYYY, LT');
+const now = moment().format('LT');
 
 $('#currentDay').text(currentDay);
 
@@ -16,9 +17,7 @@ const hoursDisplay = [
     { time: "3:00 PM", event: ""},
     { time: "4:00 PM", event: ""},
     { time: "5:00 PM", event: ""}
-]
-
-const now = moment().format('H A');
+];
 
 // create hour blocks
 hoursDisplay.forEach(function(timeBlock, index) {
@@ -26,17 +25,22 @@ hoursDisplay.forEach(function(timeBlock, index) {
     const colorBlock = bgColor(hourDisplay);
 
     // create div for every hour
-    $('.container').append('<div class="row time-block" id="' + index + 
-    '"><div class="col-2 hour">' + hourDisplay + 
-    '</div><textarea class="col-8 description ' + colorBlock + '">' + timeBlock.event + 
+    $('.container').append('<div class="row time-block" id="' + 
+    index + 
+    '"><div class="col-2 hour">' + 
+    hourDisplay + 
+    '</div><textarea class="col-8 description ' + 
+    colorBlock + '">' + 
+    timeBlock.event + 
     '</textarea><div class="col-2 saveBtn"><button type="submit"><span class="oi oi-pencil"></span></button></div></div>');
 });
 
 // change color background according to time
 function bgColor(time) {
-    let currentTime = moment(now, "H A");
-    let eventPlan = moment(time, "H A")
-    console.log(currentTime);
+    let currentTime = moment(now, "LT");
+    let eventPlan = moment(time, "LT");
+
+    // compare current time with planned time
     if (currentTime.isBefore(eventPlan) === true) {
         return 'future';
     } else if (currentTime.isAfter(eventPlan) === true) {
@@ -45,6 +49,7 @@ function bgColor(time) {
         return 'present';
     }
 };
+
 // store & load tasks
 
 // create save button
