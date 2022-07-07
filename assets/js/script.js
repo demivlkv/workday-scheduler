@@ -3,9 +3,26 @@ const currentDay = moment().format('dddd, MMMM Do, YYYY, HH:mm');
 
 $('#currentDay').text(currentDay);
 
+// create array for each hour
+const hoursDisplay = [
+    { time: "7:00 AM", event: ""},
+    { time: "8:00 AM", event: ""},
+    { time: "9:00 AM", event: ""},
+    { time: "10:00 AM", event: ""},
+    { time: "11:00 AM", event: ""},
+    { time: "12:00 PM", event: ""},
+    { time: "1:00 PM", event: ""},
+    { time: "2:00 PM", event: ""},
+    { time: "3:00 PM", event: ""},
+    { time: "4:00 PM", event: ""},
+    { time: "5:00 PM", event: ""}
+]
+
 // create hour blocks
-$(document).ready(function() {
-$('.container').append('<div class="row time-block"><div class="col hour"> 9:00AM </div><textarea class="col-8 description">Testing 1 2 3</textarea><div class="col saveBtn"></div></div>');
+hoursDisplay.forEach(function(timeBlock, index) {
+    const hourDisplay = timeBlock.time;
+
+    $('.container').append('<div class="row time-block" id="' + index + '"><div class="col-2 hour">' + hourDisplay + '</div><textarea class="col-8 description">' + timeBlock.event + '</textarea><div class="col-2 saveBtn"><button type="submit"><span class="oi oi-pencil"></span></button></div></div>');
 });
 
 // store & load tasks
