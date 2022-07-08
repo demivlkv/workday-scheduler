@@ -1,5 +1,5 @@
 // display current day at the top of the page
-const currentDay = moment().format('dddd, MMMM Do, YYYY, LT');
+const currentDay = moment().format('LLLL');
 const now = moment().format('LT');
 
 $('#currentDay').text(currentDay);
@@ -50,6 +50,15 @@ function bgColor(time) {
     }
 };
 
-// store & load tasks
+// create save button event listener
+$('.saveBtn').on('click', function(event) {
+    // create variables for text entry
+    let entryId = parseInt($(this).closest(".time-block").attr("id"));
+    let entry = $(this).val();
 
-// create save button
+    // store & load tasks
+
+
+    // save to local storage
+    localStorage.setItem('', JSON.stringify)
+});
