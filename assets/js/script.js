@@ -19,98 +19,61 @@ let workDay = [
     { time: "5:00 PM", event: ""}
 ];
 
+//load any saved entries
 function loadEntry(key) {
     let savedEntry = localStorage.getItem(key);
     if (savedEntry) {
-        $(`#col-text${key}`).text(savedEntry);
+        $('#col-text').attr('id', key).text(savedEntry);
     }
 };
 
 $(function() {
-// create hour blocks
-workDay.forEach(function(element, index) {
-    const hour = element.time;
-    const colorBlock = bgColor(hour);
+    // create hour blocks
+    workDay.forEach(function(element, index) {
+        const hour = element.time;
+        const colorBlock = bgColor(hour);
 
-    // create div for every hour
-    $('.container').append('<div class="row time-block" id="' + index + 
-    '"><div class="col-2 hour">' + hour + 
-    '</div><textarea id="col-text" class="col-8 description ' + colorBlock + 
-    '">' + element.event + 
-    '</textarea><button class="col-2 btn saveBtn" type="submit"><i class="fa-regular fa-floppy-disk"></i></button></div>');
+        // create div for every hour
+        $('.container').append('<div class="row time-block" id="' + index + 
+        '"><div class="col-2 hour">' + hour + 
+        '</div><textarea id="col-text" class="col-8 description ' + colorBlock + 
+        '">' + element.event + 
+        '</textarea><button class="col-2 btn saveBtn" type="submit"><i class="fa-regular fa-floppy-disk"></i></button></div>');
 
-    loadEntry(index);
-});
-
-// change color background according to time
-function bgColor(time) {
-    let currentTime = moment(now, "H a");
-    let workPlan = moment(time, "H a");
-
-    // compare current time with planned time
-    if (currentTime.isBefore(workPlan) === true) {
-        return 'future';
-    } else if (currentTime.isAfter(workPlan) === true) {
-        return 'past';
-    } else {
-        return 'present';
-    }
-};
-
-// create save function
-$('.saveBtn').each(function(index) {
-$(this).on('click', function(event) {
-    event.preventDefault();
-
-    // get input text from textarea
-    let entryId = parseInt($(this).closest('.time-block').attr('id'));
-    let newEntry = $.trim($(this).parent().find('#col-text').val());
-
-    // let entry = {
-    //    time: entryId,
-    //    event: newEntry
-    // }
-
-    //let savedEntry = JSON.stringify(workDay);
-
-    workDay[entryId].event = newEntry;
-
-    // save old & new entries to local storage
-    localStorage.setItem(entryId, newEntry);
-
-    // check if nothing is saved initally, then save an empty array
-    //if (localStorage.getItem('entry') == null) {
-    ///    localStorage.setItem('entry', '[]');
-    ///}
-
-    // get saved entries and push into new input
-    //let oldEntry = JSON.parse(localStorage.getItem('entry'));
-
-    console.log(localStorage);
-
-    console.log(entryId);
-    console.log(newEntry);
-
+        // load previous entries
+        loadEntry(index);
     });
 
-    //let getEntry = JSON.parse(localStorage.getItem('savedEntry'));
-    //if (getEntry) {
-    //    workDay = getEntry;
-    //}
+    // change color background according to time
+    function bgColor(time) {
+        let currentTime = moment(now, "H a");
+        let workPlan = moment(time, "H a");
 
-});
+        // compare current time with planned time
+        if (currentTime.isBefore(workPlan) === true) {
+            return 'future';
+        } else if (currentTime.isAfter(workPlan) === true) {
+            return 'past';
+        } else {
+            return 'present';
+        }
+    };
 
-/*
+    // create save function
+    $('.saveBtn').each(function(index) {
+    $(this).on('click', function(event) {
+        event.preventDefault();
 
-$('.description').each(function loadEntry(index) {
-    let getEntry = JSON.parse(localStorage.getItem('savedEntry'));
-    if (getEntry) {
-        workDay = getEntry;
-    }
-    workDay.push(getEntry);
-    if (localStorage.getItem('entry') !== null) {
-        document.getElementById('col-text').textContent = getEntry.event;
-    }
-}); */
+        // get input text from textarea
+        let entryId = parseInt($(this).closest('.time-block').attr('id'));
+        let newEntry = $.trim($(this).parent().find('#col-text').val());
+
+        // set id and value into workday array
+        workDay[entryId].event = newEntry;
+
+        // save to local storage
+        localStorage.setItem(entryId, newEntry);
+        });
+    });
 
 });
