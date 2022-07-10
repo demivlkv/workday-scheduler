@@ -1,5 +1,3 @@
-$(function() {
-
 // display current day at the top of the page
 const currentDay = moment().format('LLLL');
 const now = moment().format('LT');
@@ -21,6 +19,14 @@ let workDay = [
     { time: "5:00 PM", event: ""}
 ];
 
+function loadEntry(key) {
+    let savedEntry = localStorage.getItem(key);
+    if (savedEntry) {
+        $(`#col-text${key}`).text(savedEntry);
+    }
+};
+
+$(function() {
 // create hour blocks
 workDay.forEach(function(element, index) {
     const hour = element.time;
@@ -32,6 +38,8 @@ workDay.forEach(function(element, index) {
     '</div><textarea id="col-text" class="col-8 description ' + colorBlock + 
     '">' + element.event + 
     '</textarea><button class="col-2 btn saveBtn" type="submit"><i class="fa-regular fa-floppy-disk"></i></button></div>');
+
+    loadEntry(index);
 });
 
 // change color background according to time
@@ -49,45 +57,60 @@ function bgColor(time) {
     }
 };
 
-$('.saveBtn').on('click', function(event) {
+// create save function
+$('.saveBtn').each(function(index) {
+$(this).on('click', function(event) {
+    event.preventDefault();
+
     // get input text from textarea
     let entryId = parseInt($(this).closest('.time-block').attr('id'));
-    let newEntry = document.getElementById('col-text').value;
+    let newEntry = $.trim($(this).parent().find('#col-text').val());
 
-    let entry = {
-        time: entryId,
-        event: newEntry
-    }
+    // let entry = {
+    //    time: entryId,
+    //    event: newEntry
+    // }
 
-    let savedEntry = JSON.stringify(entry);
+    //let savedEntry = JSON.stringify(workDay);
 
-    //workDay[entryId].event = newEntry;
+    workDay[entryId].event = newEntry;
+
+    // save old & new entries to local storage
+    localStorage.setItem(entryId, newEntry);
 
     // check if nothing is saved initally, then save an empty array
-    if (localStorage.getItem('entry') == null) {
-        localStorage.setItem('entry', '[]');
-    }
+    //if (localStorage.getItem('entry') == null) {
+    ///    localStorage.setItem('entry', '[]');
+    ///}
 
     // get saved entries and push into new input
     //let oldEntry = JSON.parse(localStorage.getItem('entry'));
 
-    // save old & new entries to loca storage
-    localStorage.setItem('entry', savedEntry);
-
     console.log(localStorage);
-
 
     console.log(entryId);
     console.log(newEntry);
 
     });
 
-    $('.description').each(function loadEntry() {
-        let getEntry = JSON.parse(localStorage.getItem('entry'));
-        workDay.push(getEntry);
-        if (localStorage.getItem('entry') !== null) {
-            document.getElementById('col-text').textContent = getEntry;
-        }
+    //let getEntry = JSON.parse(localStorage.getItem('savedEntry'));
+    //if (getEntry) {
+    //    workDay = getEntry;
+    //}
+
 });
+
+/*
+
+$('.description').each(function loadEntry(index) {
+    let getEntry = JSON.parse(localStorage.getItem('savedEntry'));
+    if (getEntry) {
+        workDay = getEntry;
+    }
+    workDay.push(getEntry);
+    if (localStorage.getItem('entry') !== null) {
+        document.getElementById('col-text').textContent = getEntry.event;
+    }
+}); */
 
 });
