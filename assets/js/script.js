@@ -1,3 +1,5 @@
+$(function() {
+
 // display current day at the top of the page
 const currentDay = moment().format('LLLL');
 const now = moment().format('LT');
@@ -5,7 +7,7 @@ const now = moment().format('LT');
 $('#currentDay').text(currentDay);
 
 // create array for each hour
-const hoursDisplay = [
+let workDay = [
     { time: "7:00 AM", event: ""},
     { time: "8:00 AM", event: ""},
     { time: "9:00 AM", event: ""},
@@ -20,45 +22,72 @@ const hoursDisplay = [
 ];
 
 // create hour blocks
-hoursDisplay.forEach(function(timeBlock, index) {
-    const hourDisplay = timeBlock.time;
-    const colorBlock = bgColor(hourDisplay);
+workDay.forEach(function(element, index) {
+    const hour = element.time;
+    const colorBlock = bgColor(hour);
 
     // create div for every hour
-    $('.container').append('<div class="row time-block" id="' + 
-    index + 
-    '"><div class="col-2 hour">' + 
-    hourDisplay + 
-    '</div><textarea class="col-8 description ' + 
-    colorBlock + '">' + 
-    timeBlock.event + 
-    '</textarea><div class="col-2 saveBtn"><button type="submit"><span class="oi oi-pencil"></span></button></div></div>');
+    $('.container').append('<div class="row time-block" id="' + index + 
+    '"><div class="col-2 hour">' + hour + 
+    '</div><textarea id="col-text" class="col-8 description ' + colorBlock + 
+    '">' + element.event + 
+    '</textarea><button class="col-2 btn saveBtn" type="submit"><i class="fa-regular fa-floppy-disk"></i></button></div>');
 });
 
 // change color background according to time
 function bgColor(time) {
-    let currentTime = moment(now, "LT");
-    let eventPlan = moment(time, "LT");
+    let currentTime = moment(now, "H a");
+    let workPlan = moment(time, "H a");
 
     // compare current time with planned time
-    if (currentTime.isBefore(eventPlan) === true) {
+    if (currentTime.isBefore(workPlan) === true) {
         return 'future';
-    } else if (currentTime.isAfter(eventPlan) === true) {
+    } else if (currentTime.isAfter(workPlan) === true) {
         return 'past';
     } else {
         return 'present';
     }
 };
 
-// create save button event listener
 $('.saveBtn').on('click', function(event) {
-    // create variables for text entry
-    let entryId = parseInt($(this).closest(".time-block").attr("id"));
-    let entry = $(this).val();
+    // get input text from textarea
+    let entryId = parseInt($(this).closest('.time-block').attr('id'));
+    let newEntry = document.getElementById('col-text').value;
 
-    // store & load tasks
+    let entry = {
+        time: entryId,
+        event: newEntry
+    }
+
+    let savedEntry = JSON.stringify(entry);
+
+    //workDay[entryId].event = newEntry;
+
+    // check if nothing is saved initally, then save an empty array
+    if (localStorage.getItem('entry') == null) {
+        localStorage.setItem('entry', '[]');
+    }
+
+    // get saved entries and push into new input
+    //let oldEntry = JSON.parse(localStorage.getItem('entry'));
+
+    // save old & new entries to loca storage
+    localStorage.setItem('entry', savedEntry);
+
+    console.log(localStorage);
 
 
-    // save to local storage
-    localStorage.setItem('', JSON.stringify)
+    console.log(entryId);
+    console.log(newEntry);
+
+    });
+
+    $('.description').each(function loadEntry() {
+        let getEntry = JSON.parse(localStorage.getItem('entry'));
+        workDay.push(getEntry);
+        if (localStorage.getItem('entry') !== null) {
+            document.getElementById('col-text').textContent = getEntry;
+        }
+});
+
 });
