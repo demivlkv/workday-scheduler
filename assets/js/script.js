@@ -22,8 +22,10 @@ let workDay = [
 //load any saved entries
 function loadEntry(key) {
     let savedEntry = localStorage.getItem(key);
+
+    // load any previous entry upon refresh
     if (savedEntry) {
-        $('#col-text').attr('id', key).text(savedEntry);
+        $('#col-text-' + key).text(savedEntry);
     }
 };
 
@@ -36,7 +38,8 @@ $(function() {
         // create div for every hour
         $('.container').append('<div class="row time-block" id="' + index + 
         '"><div class="col-2 hour">' + hour + 
-        '</div><textarea id="col-text" class="col-8 description ' + colorBlock + 
+        '</div><textarea id="col-text-' + index + 
+        '" class="col-8 description ' + colorBlock + 
         '">' + element.event + 
         '</textarea><button class="col-2 btn saveBtn" type="submit"><i class="fa-regular fa-floppy-disk"></i></button></div>');
 
@@ -60,20 +63,22 @@ $(function() {
     };
 
     // create save function
-    $('.saveBtn').each(function(index) {
-    $(this).on('click', function(event) {
+    $('.saveBtn').on('click', function(event) {
         event.preventDefault();
 
         // get input text from textarea
         let entryId = parseInt($(this).closest('.time-block').attr('id'));
-        let newEntry = $.trim($(this).parent().find('#col-text').val());
+        let newEntry = $.trim($(this).parent().find('textarea').val());
 
         // set id and value into workday array
         workDay[entryId].event = newEntry;
 
         // save to local storage
         localStorage.setItem(entryId, newEntry);
-        });
+
+        console.log(localStorage);
+        console.log(entryId);
+        console.log(newEntry);
     });
 
 });
