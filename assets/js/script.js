@@ -19,11 +19,11 @@ let workDay = [
     { time: "5:00 PM", event: ""}
 ];
 
-//load any saved entries
+// load any saved entries
 function loadEntry(key) {
     let savedEntry = localStorage.getItem(key);
 
-    // load any previous entry upon refresh
+    // load previous entries upon refresh
     if (savedEntry) {
         $('#col-text-' + key).text(savedEntry);
     }
@@ -75,10 +75,6 @@ $(function() {
 
         // save to local storage
         localStorage.setItem(entryId, newEntry);
-
-        console.log(localStorage);
-        console.log(entryId);
-        console.log(newEntry);
     });
 
 });
